@@ -138,6 +138,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        
+    }
+
+    /**
      * @return Collection<int, Topic>
      */
     public function getCategory(): Collection
