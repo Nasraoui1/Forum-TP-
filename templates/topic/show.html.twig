@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ topic.title }} - Forum{% endblock %}
+
+{% block body %}
+    <div class="mb-4">
+        <h1>{{ topic.title }}</h1>
+        <div class="d-flex justify-content-between">
+            <div>
+                <span class="badge bg-primary">{{ topic.category.name }}</span>
+                {% if topic.isLocked %}
+                    <span class="badge bg-danger">Verrouillé</span>
+                {% endif %}
+                <span class="text-muted">Vues: {{ topic.views }}</span>
+            </div>
+            <div>
+                <a href="{{ path('app_category_show', {'id': topic.category.id}) }}" class="btn btn-sm btn-secondary">Retour à la catégorie</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ topic.userRelation.email }}</strong>
+            </div>
+            <small>{{ topic.createdAt|date('d/m/Y H:i') }}</small>
+        </div>
+        <div class="card-body">
+            <div class="topic-content">
+                {{ topic.content|nl2br }}
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-3">Réponses</h3>
+
+    {% if replies|length > 0 %}
+        {% for reply in replies %}
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ reply.userRelation.email }}</strong>
+                    </div>
+                    <small>{{ reply.createdAt|date('d/m/Y H:i') }}</small>
+                </div>
+                <div class="card-body">
+                    <div class="reply-content">
+                        {{ reply.content|nl2br }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info">
+            Aucune réponse pour le moment.
+        </div>
+    {% endif %}
+{% endblock %}

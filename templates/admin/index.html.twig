@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration - Forum{% endblock %}
+
+{% block body %}
+    <h1>Tableau de bord d'administration</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Utilisateurs</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ stats.users }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Sujets</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ stats.topics }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Réponses</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ stats.replies }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Catégories</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ stats.categories }}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Gestion des utilisateurs</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Rôles</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.lastName }}</td>
+                            <td>{{ user.firstName }}</td>
+                            <td>
+                                {% for role in user.roles %}
+                                    <span class="badge {% if role == 'ROLE_ADMIN' %}bg-primary{% elseif role == 'ROLE_BANNED' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                        {{ role }}
+                                    </span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if user.isActive %}
+                                    <span class="badge bg-success">Actif</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactif</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{{ path('app_admin_toggle_role', {'id': user.id, 'role': 'ROLE_USER'}) }}" class="btn btn-sm btn-outline-secondary">User</a>
+                                    <a href="{{ path('app_admin_toggle_role', {'id': user.id, 'role': 'ROLE_ADMIN'}) }}" class="btn btn-sm btn-outline-primary">Admin</a>
+                                    <a href="{{ path('app_admin_toggle_role', {'id': user.id, 'role': 'ROLE_BANNED'}) }}" class="btn btn-sm btn-outline-danger">Banned</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('app_category_index') }}" class="btn btn-primary">Gérer les catégories</a>
+        <a href="{{ path('app_language_index') }}" class="btn btn-info">Gérer les langues</a>
+        <a href="{{ path('app_topic_index') }}" class="btn btn-success">Gérer les sujets</a>
+        <a href="{{ path('app_reply_index') }}" class="btn btn-warning">Gérer les réponses</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau sujet - Forum{% endblock %}
+
+{% block body %}
+    <div class="mb-4">
+        <h1>Créer un nouveau sujet</h1>
+    </div>
+
+    {{ form_start(form) }}
+    <div class="card">
+        <div class="card-body">
+            {{ form_row(form.title) }}
+            {{ form_row(form.category) }}
+            {{ form_row(form.content) }}
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Créer le sujet</button>
+            <a href="{{ path('app_topic') }}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

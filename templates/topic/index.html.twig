@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sujets - Forum{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Tous les sujets</h1>
+        {% if app.user and not is_granted('ROLE_BANNED') %}
+            <a href="{{ path('app_topic') }}/new" class="btn btn-primary">Nouveau sujet</a>
+        {% endif %}
+    </div>
+
+    {% if topics|length > 0 %}
+        <div class="list-group">
+            {% for topic in topics %}
+                <a href="{{ path('app_topic_show', {'id': topic.id}) }}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ topic.title }}</h5>
+                        <small>{{ topic.createdAt|date('d/m/Y H:i') }}</small>
+                    </div>
+                    <p class="mb-1">{{ topic.content|slice(0, 150) }}{% if topic.content|length > 150 %}...{% endif %}</p>
+                    <small>
+                        Catégorie: {{ topic.category.name }} |
+                        Auteur: {{ topic.userRelation.email }} |
+                        Vues: {{ topic.views }}
+                        {% if topic.isLocked %}
+                            <span class="badge bg-danger">Verrouillé</span>
+                        {% endif %}
+                    </small>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Aucun sujet n'a été créé pour le moment.
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ category.name }} - Forum{% endblock %}
+
+{% block body %}
+    <div class="mb-4">
+        <h1>{{ category.name }}</h1>
+        <p class="lead">{{ category.description }}</p>
+    </div>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{{ path('app_category_index') }}" class="btn btn-secondary">Retour aux catégories</a>
+        
+        {% if app.user and not is_granted('ROLE_BANNED') %}
+            <a href="{{ path('app_topic') }}/new?category={{ category.id }}" class="btn btn-primary">Nouveau sujet</a>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Sujets dans cette catégorie</h2>
+        </div>
+        <div class="card-body">
+            {% if topics|length > 0 %}
+                <div class="list-group">
+                    {% for topic in topics %}
+                        <a href="{{ path('app_topic') }}/{{ topic.id }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ topic.title }}</h5>
+                                <small>{{ topic.createdAt|date('d/m/Y H:i') }}</small>
+                            </div>
+                            <p class="mb-1">{{ topic.content|slice(0, 150) }}{% if topic.content|length > 150 %}...{% endif %}</p>
+                            <small>
+                                Par: {{ topic.userRelation.email }}
+                                {% if topic.isLocked %}
+                                    <span class="badge bg-danger">Verrouillé</span>
+                                {% endif %}
+                                <span class="badge bg-secondary">Vues: {{ topic.views }}</span>
+                            </small>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-center">Aucun sujet dans cette catégorie pour le moment.</p>
+                {% if app.user and not is_granted('ROLE_BANNED') %}
+                    <div class="text-center mt-3">
+                        <a href="{{ path('app_topic') }}/new?category={{ category.id }}" class="btn btn-primary">Créer le premier sujet</a>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

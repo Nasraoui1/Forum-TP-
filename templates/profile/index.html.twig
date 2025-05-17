@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil - Forum{% endblock %}
+
+{% block body %}
+    <h1>Mon profil</h1>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">Informations personnelles</h2>
+                </div>
+                <div class="card-body">
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Prénom:</strong> {{ user.firstName|default('Non renseigné') }}</p>
+                    <p><strong>Nom:</strong> {{ user.lastName|default('Non renseigné') }}</p>
+                    <p><strong>Membre depuis:</strong> {{ user.createdAt|date('d/m/Y') }}</p>
+                    <p>
+                        <strong>Rôles:</strong>
+                        {% for role in user.roles %}
+                            <span class="badge {% if role == 'ROLE_ADMIN' %}bg-primary{% elseif role == 'ROLE_BANNED' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                {{ role }}
+                            </span>
+                        {% endfor %}
+                    </p>
+                    <a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Modifier mon profil</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">Mes sujets ({{ topics|length }})</h2>
+                </div>
+                <div class="card-body">
+                    {% if topics %}
+                        <div class="list-group">
+                            {% for topic in topics %}
+                                <a href="{{ path('app_topic_show', {'id': topic.id}) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ topic.title }}</h5>
+                                        <small>{{ topic.createdAt|date('d/m/Y H:i') }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ topic.content|slice(0, 100) }}{% if topic.content|length > 100 %}...{% endif %}</p>
+                                    <small>Catégorie: {{ topic.category.name }}</small>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>Vous n'avez pas encore créé de sujet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">Mes réponses ({{ replies|length }})</h2>
+                </div>
+                <div class="card-body">
+                    {% if replies %}
+                        <div class="list-group">
+                            {% for reply in replies %}
+                                <a href="{{ path('app_topic_show', {'id': reply.topic.id}) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">Réponse à: {{ reply.topic.title }}</h5>
+                                        <small>{{ reply.createdAt|date('d/m/Y H:i') }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ reply.content|slice(0, 100) }}{% if reply.content|length > 100 %}...{% endif %}</p>
+                                    <small>Statut: {% if reply.isApproved %}Approuvé{% else %}En attente d'approbation{% endif %}</small>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>Vous n'avez pas encore répondu à un sujet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

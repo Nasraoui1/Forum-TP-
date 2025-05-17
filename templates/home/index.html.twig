@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Forum{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Bienvenue sur notre forum</h1>
+
+    {% if app.user and is_granted('ROLE_BANNED') %}
+        <div class="alert alert-danger">
+            <h4>Votre compte a été banni</h4>
+            <p>Vous ne pouvez pas participer aux discussions. Veuillez contacter un administrateur pour plus d'informations.</p>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">Catégories</h2>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for category in categories %}
+                                <a href="{{ path('app_category_show', {'id': category.id}) }}" class="list-group-item list-group-item-action">
+                                <h5 class="mb-1">{{ category.name }}</h5>
+                                <p class="mb-1">{{ category.description }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">Derniers sujets</h2>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for topic in latestTopics %}
+                                <a href="{{ path('app_topic', {'id': topic.id}) }}" class="list-group-item list-group-item-action">                              
+                                 <h6 class="mb-1">{{ topic.title }}</h6>
+                                <small>{{ topic.createdAt|date('d/m/Y H:i') }}</small>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
