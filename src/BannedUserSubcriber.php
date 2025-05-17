@@ -42,12 +42,10 @@ class BannedUserSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $path = $request->getPathInfo();
         
-        // Ne pas rediriger pour la page d'accueil et la déconnexion
         if ($path === '/' || $path === '/logout') {
             return;
         }
 
-        // Si l'utilisateur est banni et essaie d'accéder à une page autre que l'accueil
         if ($this->security->isGranted('ROLE_BANNED')) {
             $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_home')));
         }

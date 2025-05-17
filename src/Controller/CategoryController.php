@@ -23,7 +23,6 @@ class CategoryController extends AbstractController
     #[Route('/{id}', name: '_show', methods: ['GET'])]
     public function show(Category $category, TopicRepository $topicRepository): Response
     {
-        // Récupérer les topics associés à cette catégorie
         $topics = $topicRepository->findBy(['category' => $category], ['createdAt' => 'DESC']);
         
         return $this->render('category/show.html.twig', [
@@ -32,5 +31,4 @@ class CategoryController extends AbstractController
         ]);
     }
     
-    // Autres méthodes existantes...
 }

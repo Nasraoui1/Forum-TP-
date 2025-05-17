@@ -24,7 +24,6 @@ class ProfileController extends AbstractController
             throw new AccessDeniedException('Vous devez être connecté pour accéder à cette page.');
         }
 
-        // Utilisez userRelation au lieu de user dans la requête
         $topics = $topicRepository->findBy(['userRelation' => $user], ['createdAt' => 'DESC']);
         $replies = $replyRepository->findBy(['userRelation' => $user], ['createdAt' => 'DESC']);
 

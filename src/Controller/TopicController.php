@@ -28,12 +28,10 @@ public function new(Request $request, EntityManagerInterface $entityManager, Cat
 {
     $topic = new Topic();
     
-    // Définir des valeurs par défaut
     $topic->setCreatedAt(new \DateTimeImmutable());
     $topic->setViews(0);
     $topic->setIsLocked(false);
     
-    // Pré-remplir la catégorie si elle est spécifiée dans la requête
     $categoryId = $request->query->get('category');
     if ($categoryId) {
         $category = $categoryRepository->find($categoryId);
@@ -46,7 +44,6 @@ public function new(Request $request, EntityManagerInterface $entityManager, Cat
     $form->handleRequest($request);
     
     if ($form->isSubmitted() && $form->isValid()) {
-        // Définir l'utilisateur actuel comme auteur
         $topic->setUserRelation($this->getUser());
         
         $entityManager->persist($topic);
@@ -65,11 +62,9 @@ public function new(Request $request, EntityManagerInterface $entityManager, Cat
     #[Route('/topic/{id}', name: 'app_topic_show', methods: ['GET'])]
     public function show(Topic $topic, ReplyRepository $replyRepository, EntityManagerInterface $entityManager): Response
     {
-        // Incrémenter le compteur de vues
         $topic->setViews($topic->getViews() + 1);
         $entityManager->flush();
         
-        // Récupérer les réponses associées à ce sujet
         $replies = $replyRepository->findBy(['topic' => $topic], ['createdAt' => 'ASC']);
         
         return $this->render('topic/show.html.twig', [
@@ -78,5 +73,4 @@ public function new(Request $request, EntityManagerInterface $entityManager, Cat
         ]);
     }
     
-    // Autres méthodes existantes...
 }

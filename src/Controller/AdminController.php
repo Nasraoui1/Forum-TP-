@@ -47,12 +47,10 @@ class AdminController extends AbstractController
         $roles = $user->getRoles();
 
         if (in_array($role, ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_BANNED'])) {
-            // Supprimer tous les rôles actuels sauf ROLE_USER
             $roles = array_filter($roles, function($r) {
                 return $r !== 'ROLE_ADMIN' && $r !== 'ROLE_BANNED';
             });
 
-            // Ajouter le nouveau rôle
             if ($role !== 'ROLE_USER') {
                 $roles[] = $role;
             }

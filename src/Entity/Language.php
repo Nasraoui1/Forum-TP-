@@ -97,7 +97,6 @@ class Language
     public function removeTopic(Topic $topic): static
     {
         if ($this->topics->removeElement($topic)) {
-            // set the owning side to null (unless already changed)
             if ($topic->getLanguage() === $this) {
                 $topic->setLanguage(null);
             }
